@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			private var emptyStar:String = "empty_star.png";
+			private var fullStar:String = "full_star.png";
+
+			
+			[Bindable]
+			public var musics : ArrayCollection;
+			
+			[Bindable]
+			public var playlists : ArrayCollection;
+			
+			/// Set music list
+			protected function setMusicList(musics : ArrayCollection):void
+			{
+				
+			}
+			
+			
+			//
+			// Tweeter rate
+			//
+			protected function brate1_clickHandler(event:MouseEvent):void
+			{
+				brate1.source = "../assets/" + fullStar;
+				brate2.source = "../assets/" + emptyStar;
+				brate3.source = "../assets/" + emptyStar;
+				brate4.source = "../assets/" + emptyStar;
+				brate5.source = "../assets/" + emptyStar;
+			}
+			
+			protected function brate2_clickHandler(event:MouseEvent):void
+			{
+				brate1.source = "../assets/" + fullStar;
+				brate2.source = "../assets/" + fullStar;
+				brate3.source = "../assets/" + emptyStar;
+				brate4.source = "../assets/" + emptyStar;
+				brate5.source = "../assets/" + emptyStar;
+			}
+			
+			protected function brate3_clickHandler(event:MouseEvent):void
+			{
+				brate1.source = "../assets/" + fullStar;
+				brate2.source = "../assets/" + fullStar;
+				brate3.source = "../assets/" + fullStar;
+				brate4.source = "../assets/" + emptyStar;
+				brate5.source = "../assets/" + emptyStar;
+			}
+			
+			protected function brate4_clickHandler(event:MouseEvent):void
+			{
+				brate1.source = "../assets/" + fullStar;
+				brate2.source = "../assets/" + fullStar;
+				brate3.source = "../assets/" + fullStar;
+				brate4.source = "../assets/" + fullStar;
+				brate5.source = "../assets/" + emptyStar;
+			}
+			
+			protected function brate5_clickHandler(event:MouseEvent):void
+			{
+				brate1.source = "../assets/" + fullStar;
+				brate2.source = "../assets/" + fullStar;
+				brate3.source = "../assets/" + fullStar;
+				brate4.source = "../assets/" + fullStar;
+				brate5.source = "../assets/" + fullStar;
+			}
+			
+			protected function tweeter_clickHandler(event:MouseEvent):void
+			{
+				/// TODO
+			}
+			
+		]]>
+	</fx:Script>
+	<s:BorderContainer cornerRadius="10">
+		<s:layout>
+			<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
+		</s:layout>
+		<s:HGroup verticalAlign="middle">
+			<s:BorderContainer cornerRadius="10">
+				<s:Label width="225" fontFamily="Verdana" fontSize="32" text="MP3 Player"
+						 textAlign="left" verticalAlign="bottom"/>
+			</s:BorderContainer>
+			<s:Image id="brandomize" width="24" height="24" smooth="true"
+					 source="assets/media_shuffle.png"/>
+			<s:Image id="brepeat" width="24" height="24" smooth="true"
+					 source="assets/media_repeat.png"/>
+			<mx:HSlider id="bvolume" width="100" maximum="100"/>
+			<s:Rect width="123" />
+			<s:Image id="brate1" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate1_clickHandler(event)" />
+			<s:Image id="brate2" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate2_clickHandler(event)" />
+			<s:Image id="brate3" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate3_clickHandler(event)" />
+			<s:Image id="brate4" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate4_clickHandler(event)" />
+			<s:Image id="brate5" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate5_clickHandler(event)" />
+			<s:Image id="btweet" width="42" height="42" smooth="true" source="assets/twitter_logo.jpeg" click="tweeter_clickHandler(event)"/>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle">
+			<s:Image id="bprevious" width="48" height="48" smooth="true" source="assets/previous.png"/>
+			<s:Image id="bplaypause" width="60" height="60" smooth="true" source="assets/pause.png"/>
+			<s:Image id="bnext" width="48" height="48" smooth="true" source="assets/next.png"/>
+			<s:BorderContainer cornerRadius="10">
+				<s:VGroup horizontalAlign="center" width="514" paddingBottom="5" paddingTop="5">
+					<s:Label text="Artiste - Title - Album" />
+					<mx:HSlider id="bmusicprogressbar" width="504"/>
+				</s:VGroup>
+			</s:BorderContainer>
+		</s:HGroup>
+		<s:HGroup verticalAlign="top">
+			<s:BorderContainer cornerRadius="10">
+				<s:VGroup horizontalAlign="left" width="455">
+					<s:HGroup verticalAlign="bottom">
+						<s:Rect width="5" />
+						<s:Button label="Current Playlist" id="bcurrentplaylist" />
+						<s:Button label="Collection" id="bcollection" />
+						<s:Rect width="215" />
+						<s:Image width="32" height="32" id="bsearchfromfile" />
+					</s:HGroup>
+					<s:List id="lmusiclist" width="455" borderVisible="false">
+						<mx:ArrayCollection>
+							<fx:String>01 - Lorem ipsum dolor - Sit amet</fx:String>
+							<fx:String>02 - Lorem ipsum dolor - Sit amet</fx:String>
+							<fx:String>03 - Lorem ipsum dolor - Sit amet</fx:String>
+							<fx:String>04 - Lorem ipsum dolor - Sit amet</fx:String>
+							<fx:String>05 - Lorem ipsum dolor - Sit amet</fx:String>
+							<fx:String>06 - Lorem ipsum dolor - Sit amet</fx:String>
+						</mx:ArrayCollection>
+					</s:List>
+				</s:VGroup>
+			</s:BorderContainer>
+			<s:BorderContainer cornerRadius="10">
+				<s:VGroup horizontalAlign="left" width="225">
+					<s:HGroup verticalAlign="bottom">
+						<s:Rect width="5" />
+						<s:Label text="Playlists" />
+						<s:Rect width="83" />
+						<s:Image width="32" height="32" id="bnewplaylist" />
+						<s:Image width="32" height="32" id="bsaveplylist" />
+					</s:HGroup>
+					<s:List id="lplaylist" width="225" borderVisible="false">
+						<mx:ArrayCollection>
+							<fx:String>Lorem</fx:String>
+							<fx:String>Ipsum</fx:String>
+							<fx:String>Dolor</fx:String>
+							<fx:String>Sit</fx:String>
+							<fx:String>Amet</fx:String>
+						</mx:ArrayCollection>
+					</s:List>
+				</s:VGroup>
+			</s:BorderContainer>
+		</s:HGroup>
+	</s:BorderContainer>
+</s:WindowedApplication>
