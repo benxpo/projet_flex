@@ -81,7 +81,7 @@
 			
 		]]>
 	</fx:Script>
-	<s:BorderContainer cornerRadius="10">
+	<s:BorderContainer>
 		<s:layout>
 			<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
 		</s:layout>
@@ -89,7 +89,7 @@
 			<s:Image id="bprevious" width="48" height="48" smooth="true" source="assets/previous.png"/>
 			<s:Image id="bplaypause" width="60" height="60" smooth="true" source="assets/pause.png"/>
 			<s:Image id="bnext" width="48" height="48" smooth="true" source="assets/next.png"/>
-			<s:BorderContainer cornerRadius="10">
+			<s:BorderContainer cornerRadius="5">
 				<s:VGroup horizontalAlign="left" paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5">
 					<s:Label text="Artiste - Title - Album" />
 					<mx:HSlider id="bmusicprogressbar" width="480"/>
@@ -111,19 +111,22 @@
 			<s:Image id="btweet" width="42" height="42" smooth="true" source="assets/twitter_logo.jpeg" click="tweeter_clickHandler(event)"/>
 		</s:HGroup>
 		<s:HGroup verticalAlign="top">
-			<s:BorderContainer cornerRadius="10">
+			<s:BorderContainer>
 				<s:VGroup horizontalAlign="left">
-					<s:HGroup contentBackgroundAlpha="1.0" contentBackgroundColor="#FFFFFF"
-							  paddingBottom="2" paddingLeft="5" paddingRight="5" paddingTop="2"
-							  verticalAlign="middle">
-						<s:TextInput text="Current Playlist" width="280" />
-						<s:Rect width="84" />
-						<s:Image id="bsaveplylist" width="24" height="24"
-								 source="assets/save.jpeg"/>
-						<s:Image id="bsearchfromfile" width="24" height="24" smooth="true"
-								 source="assets/folder.jpeg"/>
-					</s:HGroup>
-					<s:List id="lmusiclist" width="440" borderVisible="false">
+					<s:BorderContainer backgroundColor="0xcccccc" borderWeight="0">
+						<s:HGroup verticalAlign="middle" paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3">
+							<s:Rect width="100%" height="100%">
+								<s:fill><s:SolidColor color="0xFF0000" /></s:fill>
+							</s:Rect>
+							<s:TextInput text="Current Playlist" width="280" />
+							<s:Rect width="84" />
+							<s:Image id="bsaveplylist" width="24" height="24"
+									 source="assets/save.jpeg"/>
+							<s:Image id="bsearchfromfile" width="24" height="24" smooth="true"
+									 source="assets/folder.jpeg"/>
+						</s:HGroup>
+					</s:BorderContainer>
+					<s:List id="lmusiclist" width="100%" borderVisible="false">
 						<mx:ArrayCollection>
 							<fx:String>01 - Lorem ipsum dolor - Sit amet</fx:String>
 							<fx:String>02 - Lorem ipsum dolor - Sit amet</fx:String>
@@ -135,17 +138,18 @@
 					</s:List>
 				</s:VGroup>
 			</s:BorderContainer>
-			<s:BorderContainer cornerRadius="10">
+			<s:BorderContainer>
 				<s:VGroup horizontalAlign="left">
-					<s:HGroup chromeColor="#CCCCCC" contentBackgroundColor="#FFFFFF"
-							  paddingBottom="2" paddingLeft="5" paddingRight="5" paddingTop="2"
-							  verticalAlign="middle">
-						<s:Label fontSize="14" fontWeight="bold" text="Playlists"/>
-						<s:Rect width="113" />
-						<s:Image id="bnewplaylist" width="24" height="24" smooth="true"
-								 source="assets/create.jpeg"/>
-					</s:HGroup>
-					<s:List id="lplaylist" width="216" borderVisible="false">
+					<s:BorderContainer backgroundColor="0xcccccc" borderWeight="0" >
+						<s:HGroup paddingBottom="3" paddingLeft="3" paddingRight="3" paddingTop="3"
+								  verticalAlign="middle">
+							<s:Label fontSize="14" fontWeight="bold" text="Playlists"/>
+							<s:Rect width="117" />
+							<s:Image id="bnewplaylist" width="24" height="24" smooth="true"
+									 source="assets/create.jpeg"/>
+						</s:HGroup>
+					</s:BorderContainer>
+					<s:List id="lplaylist" width="100%" borderVisible="false">
 						<mx:ArrayCollection>
 							<fx:String>Lorem</fx:String>
 							<fx:String>Ipsum</fx:String>
