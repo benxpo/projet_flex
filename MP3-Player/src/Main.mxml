@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
-					   xmlns:s="library://ns.adobe.com/flex/spark" 
-					   xmlns:mx="library://ns.adobe.com/flex/mx">
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   width="710" height="350">
+	<s:layout>
+		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
+	</s:layout>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -10,7 +14,6 @@
 			private var emptyStar:String = "empty_star.png";
 			private var fullStar:String = "full_star.png";
 
-			
 			[Bindable]
 			public var musics : ArrayCollection;
 			
@@ -22,7 +25,6 @@
 			{
 				
 			}
-			
 			
 			//
 			// Tweeter rate
@@ -84,16 +86,23 @@
 			<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
 		</s:layout>
 		<s:HGroup verticalAlign="middle">
+			<s:Image id="bprevious" width="48" height="48" smooth="true" source="assets/previous.png"/>
+			<s:Image id="bplaypause" width="60" height="60" smooth="true" source="assets/pause.png"/>
+			<s:Image id="bnext" width="48" height="48" smooth="true" source="assets/next.png"/>
 			<s:BorderContainer cornerRadius="10">
-				<s:Label width="225" fontFamily="Verdana" fontSize="32" text="MP3 Player"
-						 textAlign="left" verticalAlign="bottom"/>
+				<s:VGroup horizontalAlign="left" paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5">
+					<s:Label text="Artiste - Title - Album" />
+					<mx:HSlider id="bmusicprogressbar" width="480"/>
+				</s:VGroup>
 			</s:BorderContainer>
+		</s:HGroup>
+		<s:HGroup verticalAlign="middle">
 			<s:Image id="brandomize" width="24" height="24" smooth="true"
 					 source="assets/media_shuffle.png"/>
 			<s:Image id="brepeat" width="24" height="24" smooth="true"
 					 source="assets/media_repeat.png"/>
-			<mx:HSlider id="bvolume" width="100" maximum="100"/>
-			<s:Rect width="123" />
+			<mx:HSlider id="bvolume" width="112" maximum="100"/>
+			<s:Rect width="260" />
 			<s:Image id="brate1" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate1_clickHandler(event)" />
 			<s:Image id="brate2" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate2_clickHandler(event)" />
 			<s:Image id="brate3" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate3_clickHandler(event)" />
@@ -101,28 +110,20 @@
 			<s:Image id="brate5" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate5_clickHandler(event)" />
 			<s:Image id="btweet" width="42" height="42" smooth="true" source="assets/twitter_logo.jpeg" click="tweeter_clickHandler(event)"/>
 		</s:HGroup>
-		<s:HGroup verticalAlign="middle">
-			<s:Image id="bprevious" width="48" height="48" smooth="true" source="assets/previous.png"/>
-			<s:Image id="bplaypause" width="60" height="60" smooth="true" source="assets/pause.png"/>
-			<s:Image id="bnext" width="48" height="48" smooth="true" source="assets/next.png"/>
-			<s:BorderContainer cornerRadius="10">
-				<s:VGroup horizontalAlign="center" width="514" paddingBottom="5" paddingTop="5">
-					<s:Label text="Artiste - Title - Album" />
-					<mx:HSlider id="bmusicprogressbar" width="504"/>
-				</s:VGroup>
-			</s:BorderContainer>
-		</s:HGroup>
 		<s:HGroup verticalAlign="top">
 			<s:BorderContainer cornerRadius="10">
-				<s:VGroup horizontalAlign="left" width="455">
-					<s:HGroup verticalAlign="bottom">
-						<s:Rect width="5" />
-						<s:Button label="Current Playlist" id="bcurrentplaylist" />
-						<s:Button label="Collection" id="bcollection" />
-						<s:Rect width="215" />
-						<s:Image width="32" height="32" id="bsearchfromfile" />
+				<s:VGroup horizontalAlign="left">
+					<s:HGroup contentBackgroundAlpha="1.0" contentBackgroundColor="#FFFFFF"
+							  paddingBottom="2" paddingLeft="5" paddingRight="5" paddingTop="2"
+							  verticalAlign="middle">
+						<s:TextInput text="Current Playlist" width="280" />
+						<s:Rect width="84" />
+						<s:Image id="bsaveplylist" width="24" height="24"
+								 source="assets/save.jpeg"/>
+						<s:Image id="bsearchfromfile" width="24" height="24" smooth="true"
+								 source="assets/folder.jpeg"/>
 					</s:HGroup>
-					<s:List id="lmusiclist" width="455" borderVisible="false">
+					<s:List id="lmusiclist" width="440" borderVisible="false">
 						<mx:ArrayCollection>
 							<fx:String>01 - Lorem ipsum dolor - Sit amet</fx:String>
 							<fx:String>02 - Lorem ipsum dolor - Sit amet</fx:String>
@@ -135,15 +136,16 @@
 				</s:VGroup>
 			</s:BorderContainer>
 			<s:BorderContainer cornerRadius="10">
-				<s:VGroup horizontalAlign="left" width="225">
-					<s:HGroup verticalAlign="bottom">
-						<s:Rect width="5" />
-						<s:Label text="Playlists" />
-						<s:Rect width="83" />
-						<s:Image width="32" height="32" id="bnewplaylist" />
-						<s:Image width="32" height="32" id="bsaveplylist" />
+				<s:VGroup horizontalAlign="left">
+					<s:HGroup chromeColor="#CCCCCC" contentBackgroundColor="#FFFFFF"
+							  paddingBottom="2" paddingLeft="5" paddingRight="5" paddingTop="2"
+							  verticalAlign="middle">
+						<s:Label fontSize="14" fontWeight="bold" text="Playlists"/>
+						<s:Rect width="113" />
+						<s:Image id="bnewplaylist" width="24" height="24" smooth="true"
+								 source="assets/create.jpeg"/>
 					</s:HGroup>
-					<s:List id="lplaylist" width="225" borderVisible="false">
+					<s:List id="lplaylist" width="216" borderVisible="false">
 						<mx:ArrayCollection>
 							<fx:String>Lorem</fx:String>
 							<fx:String>Ipsum</fx:String>
