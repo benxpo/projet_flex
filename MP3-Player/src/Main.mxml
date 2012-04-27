@@ -172,11 +172,11 @@
 			<s:Image id="bprevious" width="48" height="48" smooth="true" source="assets/previous.png"/>
 			<s:Image id="bplaypause" width="60" height="60" smooth="true" source="assets/pause.png"/>
 			<s:Image id="bnext" width="48" height="48" smooth="true" source="assets/next.png"/>
-			<s:BorderContainer cornerRadius="2">
+			<s:BorderContainer>
 				<s:VGroup x="0" y="0" horizontalAlign="center" paddingBottom="8" paddingLeft="5"
 						  paddingRight="5" paddingTop="15">
 					<s:Label text="Artiste - Title - Album" />
-					<mx:HSlider id="bmusicprogressbar" width="480"/>
+					<mx:HSlider id="bmusicprogressbar" width="485"/>
 				</s:VGroup>
 			</s:BorderContainer>
 		</s:HGroup>
