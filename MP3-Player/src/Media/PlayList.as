@@ -1,4 +1,4 @@
-package Media
+package media
 {
 	public class PlayList
 	{
