@@ -7,10 +7,10 @@
 		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
 	</s:layout>
 	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import Media.Play;
 			import Media.PlayList;
 			import Media.PlayListCollection;
 			
@@ -29,7 +29,6 @@
 			//
 			protected function brate1_clickHandler(event:MouseEvent):void
 			{
-				brate1.source = fullStar;
 				brate2.source = emptyStar;
 				brate3.source = emptyStar;
 				brate4.source = emptyStar;
@@ -38,7 +37,6 @@
 			
 			protected function brate2_clickHandler(event:MouseEvent):void
 			{
-				brate1.source = fullStar;
 				brate2.source = fullStar;
 				brate3.source = emptyStar;
 				brate4.source = emptyStar;
@@ -47,7 +45,6 @@
 			
 			protected function brate3_clickHandler(event:MouseEvent):void
 			{
-				brate1.source = fullStar;
 				brate2.source = fullStar;
 				brate3.source = fullStar;
 				brate4.source = emptyStar;
@@ -56,7 +53,6 @@
 			
 			protected function brate4_clickHandler(event:MouseEvent):void
 			{
-				brate1.source = fullStar;
 				brate2.source = fullStar;
 				brate3.source = fullStar;
 				brate4.source = fullStar;
@@ -65,16 +61,26 @@
 			
 			protected function brate5_clickHandler(event:MouseEvent):void
 			{
-				brate1.source = fullStar;
 				brate2.source = fullStar;
 				brate3.source = fullStar;
 				brate4.source = fullStar;
 				brate5.source = fullStar;
 			}
 			
-			protected function tweeter_clickHandler(event:MouseEvent):void
+			public function get_rate():String
 			{
-				var currentMusicName:String = musicList.selectedItem;
+				var cpt:int = 1;
+				
+				if (brate2.source == fullStar) cpt++;
+				if (brate3.source == fullStar) cpt++;
+				if (brate4.source == fullStar) cpt++;
+				if (brate5.source == fullStar) cpt++;
+				
+				return String(cpt);
+			}
+			
+			protected function tweeter_clickHandler(event:MouseEvent):void
+			{				
 				/// TODO
 			}
 			
@@ -160,7 +166,31 @@
 						for(var i:int = 0; i < playList._playList.length; i++)
 							musicArray.addItem(playList._playList[i]._name);
 				}
-			}				
+			}
+			
+			public function GetCurrentMusique():Play
+			{
+				return playListcollection.GetMusic(playListList.selectedItem, musicList.selectedItem);
+			}
+			
+			public function GetNextMusique():Play
+			{
+				if (musicArray.length != 0)
+				{
+					if (musicList.selectedIndex >= 0 && musicList.selectedIndex + 1 <= musicArray.length - 1)
+					{
+						musicList.selectedIndex = musicList.selectedIndex + 1;
+						return  GetCurrentMusique();
+					}
+					else
+					{
+						musicList.selectedIndex = 0;
+						return  GetCurrentMusique();
+					}
+				}
+				
+				return null;
+			}
 		]]>
 	</fx:Script>
 	
@@ -182,11 +212,11 @@
 		</s:HGroup>
 		<s:BorderContainer width="670">
 			<s:HGroup width="671" verticalAlign="middle" paddingBottom="5" paddingTop="5" paddingLeft="10">
-				<s:Label fontSize="14" text="Volume"/>
+				<s:Label fontSize="14" text="Volume" id="vol"/>
 				<s:Rect width="10"/>
 				<mx:HSlider id="bvolume" labels="0,100" width="159" minimum="0" maximum="100" tickInterval="20"/>
 				<s:Rect width="185"/>
-				<s:Image id="brate1" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate1_clickHandler(event)" />
+				<s:Image id="brate1" width="30" height="30" smooth="true" source="assets/full_star.png" click="brate1_clickHandler(event)" />
 				<s:Image id="brate2" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate2_clickHandler(event)" />
 				<s:Image id="brate3" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate3_clickHandler(event)" />
 				<s:Image id="brate4" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate4_clickHandler(event)" />
