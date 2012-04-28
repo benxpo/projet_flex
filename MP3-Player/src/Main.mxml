@@ -22,7 +22,23 @@
 			
 			private var playListcollection:PlayListCollection = new PlayListCollection();	
 			private var emptyStar:String = "../assets/empty_star.png";
-			private var fullStar:String = "../assets/full_star.png";		
+			private var fullStar:String = "../assets/full_star.png";
+			
+			//
+			// Playing Manager
+			//
+			
+			// Play the current selected song
+			protected function PlayCurrentSong():void
+			{}
+			
+			// Play the previous song
+			protected function PlayPreviousSong():void
+			{}
+			
+			// Play the next song
+			protected function PlayNextSong():void
+			{}
 			
 			//
 			// Tweeter rate
@@ -67,6 +83,7 @@
 				brate5.source = fullStar;
 			}
 			
+			// Get the rate choose by the user
 			public function get_rate():String
 			{
 				var cpt:int = 1;
@@ -79,6 +96,7 @@
 				return String(cpt);
 			}
 			
+			// Send the rate to the tweeter account
 			protected function tweeter_clickHandler(event:MouseEvent):void
 			{				
 				/// TODO
@@ -87,6 +105,7 @@
 			//
 			// PlayList Management
 			//
+			
 			private function AddPlayList(event:MouseEvent):void
 			{
 				if (textInputPlayList.text != "")
@@ -168,24 +187,46 @@
 				}
 			}
 			
-			public function GetCurrentMusique():Play
+			// Get the Play object of the current song
+			public function GetCurrentMusic():Play
 			{
 				return playListcollection.GetMusic(playListList.selectedItem, musicList.selectedItem);
 			}
 			
-			public function GetNextMusique():Play
+			// Get the Play object of the next music
+			public function GetNextMusic():Play
 			{
 				if (musicArray.length != 0)
 				{
 					if (musicList.selectedIndex >= 0 && musicList.selectedIndex + 1 <= musicArray.length - 1)
 					{
 						musicList.selectedIndex = musicList.selectedIndex + 1;
-						return  GetCurrentMusique();
+						return  GetCurrentMusic();
 					}
 					else
 					{
 						musicList.selectedIndex = 0;
-						return  GetCurrentMusique();
+						return  GetCurrentMusic();
+					}
+				}
+				
+				return null;
+			}
+			
+			// Get the Play object of the previous music
+			public function GetPreviousMusic():Play
+			{
+				if (musicArray.length != 0)
+				{
+					if (musicList.selectedIndex - 1 >= 0)
+					{
+						musicList.selectedIndex = musicList.selectedIndex - 1;
+						return  GetCurrentMusic();
+					}
+					else
+					{
+						musicList.selectedIndex = musicArray.length - 1;
+						return  GetCurrentMusic();
 					}
 				}
 				
