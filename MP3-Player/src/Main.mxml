@@ -99,7 +99,8 @@
 			// Send the rate to the tweeter account
 			protected function tweeter_clickHandler(event:MouseEvent):void
 			{				
-				/// TODO
+				var p:PopupTweet = new PopupTweet();
+				p.open();
 			}
 			
 			//
