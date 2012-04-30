@@ -9,10 +9,10 @@ package MediaTool
 		{
 			_path = path;
 			
-			var splitedPath = path.split('\\');
+			var splitedPath:Array = path.split('\\');
 			if (splitedPath.length > 0)
 			{	
-				var splitedName = splitedPath[splitedPath.length - 1].split('.');
+				var splitedName:Array = splitedPath[splitedPath.length - 1].split('.');
 				if (splitedName.length > 1)
 				{
 					//if (splitedName[splitedName.length - 1] == "mp3")

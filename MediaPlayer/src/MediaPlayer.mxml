@@ -2,7 +2,8 @@
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
 					   xmlns:s="library://ns.adobe.com/flex/spark"
 					   xmlns:mx="library://ns.adobe.com/flex/mx"
-					   width="710" height="358">
+					   width="710" height="358"
+					   creationComplete="init()">
 	<s:layout>
 		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
 	</s:layout>
@@ -23,6 +24,13 @@
 			private var playListcollection:PlayListCollection = new PlayListCollection();	
 			private var emptyStar:String = "../assets/empty_star.png";
 			private var fullStar:String = "../assets/full_star.png";
+			
+			public function init():void
+			{
+				this.UpdatePlayListList();
+				playListList.selectedIndex = 0;
+				this.UpdateMusicList();
+			}
 			
 			//
 			// Playing Manager
@@ -129,6 +137,9 @@
 			{
 				while (playListArray.length > 0)
 					playListArray.removeItemAt(0);
+				
+				if (playListcollection._playListcollection.length == 0)
+					playListcollection.AddPlayList("Default playlist");
 				
 				for(var i:int = 0; i < playListcollection._playListcollection.length; i++)
 					playListArray.addItem(playListcollection._playListcollection[i]._name);
