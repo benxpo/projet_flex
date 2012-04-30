@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009"
+					   xmlns:s="library://ns.adobe.com/flex/spark"
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   width="710" height="358">
+	<s:layout>
+		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
+	</s:layout>
+	<fx:Declarations>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import MediaTool.Play;
+			import MediaTool.PlayList;
+			import MediaTool.PlayListCollection;
+			
+			import mx.collections.Sort;
+			import mx.collections.SortField;
+			import mx.controls.Alert;
+			
+			import spark.events.IndexChangeEvent;
+			
+			private var playListcollection:PlayListCollection = new PlayListCollection();	
+			private var emptyStar:String = "../assets/empty_star.png";
+			private var fullStar:String = "../assets/full_star.png";
+			
+			//
+			// Playing Manager
+			//
+			
+			// Play the current selected song
+			protected function PlayCurrentSong():void
+			{}
+			
+			// Play the previous song
+			protected function PlayPreviousSong():void
+			{}
+			
+			// Play the next song
+			protected function PlayNextSong():void
+			{}
+			
+			//
+			// Tweeter rate
+			//
+			protected function brate1_clickHandler(event:MouseEvent):void
+			{
+				brate2.source = emptyStar;
+				brate3.source = emptyStar;
+				brate4.source = emptyStar;
+				brate5.source = emptyStar;
+			}
+			
+			protected function brate2_clickHandler(event:MouseEvent):void
+			{
+				brate2.source = fullStar;
+				brate3.source = emptyStar;
+				brate4.source = emptyStar;
+				brate5.source = emptyStar;
+			}
+			
+			protected function brate3_clickHandler(event:MouseEvent):void
+			{
+				brate2.source = fullStar;
+				brate3.source = fullStar;
+				brate4.source = emptyStar;
+				brate5.source = emptyStar;
+			}
+			
+			protected function brate4_clickHandler(event:MouseEvent):void
+			{
+				brate2.source = fullStar;
+				brate3.source = fullStar;
+				brate4.source = fullStar;
+				brate5.source = emptyStar;
+			}
+			
+			protected function brate5_clickHandler(event:MouseEvent):void
+			{
+				brate2.source = fullStar;
+				brate3.source = fullStar;
+				brate4.source = fullStar;
+				brate5.source = fullStar;
+			}
+			
+			// Get the rate choose by the user
+			public function get_rate():String
+			{
+				var cpt:int = 1;
+				
+				if (brate2.source == fullStar) cpt++;
+				if (brate3.source == fullStar) cpt++;
+				if (brate4.source == fullStar) cpt++;
+				if (brate5.source == fullStar) cpt++;
+				
+				return String(cpt);
+			}
+			
+			// Send the rate to the tweeter account
+			protected function tweeter_clickHandler(event:MouseEvent):void
+			{				
+				var p:PopupTweet = new PopupTweet();
+				p.open();
+			}
+			
+			//
+			// PlayList Management
+			//
+			
+			private function AddPlayList(event:MouseEvent):void
+			{
+				if (textInputPlayList.text != "")
+				{
+					playListcollection.AddPlayList(textInputPlayList.text);
+					textInputPlayList.text = "";
+				}
+				
+				UpdatePlayListList();
+			}
+			
+			private function RemovePlayList(event:MouseEvent):void
+			{
+				playListcollection.RemovePlayList(playListList.selectedItem);
+				
+				UpdatePlayListList();
+			}								
+			
+			private function UpdatePlayListList():void
+			{
+				while (playListArray.length > 0)
+					playListArray.removeItemAt(0);
+				
+				for(var i:int = 0; i < playListcollection._playListcollection.length; i++)
+					playListArray.addItem(playListcollection._playListcollection[i]._name);
+				
+				playListArray.sort = new Sort();
+				playListArray.refresh();
+			}
+			
+			private function PlayListChangedHandler(event:IndexChangeEvent):void 
+			{
+				UpdateMusicList();
+			}
+			
+			//
+			// Music Management
+			//
+			protected function AddMusic(event:MouseEvent):void
+			{
+				if (playListList.selectedIndex != -1)
+				{
+					var openFile:File = new File();
+					openFile.addEventListener(Event.SELECT, AddMusicComplete);
+					openFile.browse();	
+				}
+			}
+			
+			private function AddMusicComplete(event:Event):void
+			{
+				if (playListList.selectedIndex != -1)
+				{
+					playListcollection.AddMusic(playListList.selectedItem, event.target.nativePath);				
+					UpdateMusicList();
+				}
+			}
+			
+			protected function RemoveMusic(event:MouseEvent):void
+			{
+				if (playListList.selectedIndex != -1)
+				{
+					playListcollection.RemoveMusic(playListList.selectedItem, musicList.selectedItem);
+					UpdateMusicList();
+				}
+			}
+			
+			private function UpdateMusicList():void
+			{
+				if (playListList.selectedIndex != -1)
+				{
+					while (musicArray.length > 0)
+						musicArray.removeItemAt(0);
+					
+					var playList:PlayList = playListcollection.GetPlayList(playListList.selectedItem);
+					
+					if (playList != null)
+						for(var i:int = 0; i < playList._playList.length; i++)
+							musicArray.addItem(playList._playList[i]._name);
+				}
+			}
+			
+			// Get the Play object of the current song
+			public function GetCurrentMusic():Play
+			{
+				return playListcollection.GetMusic(playListList.selectedItem, musicList.selectedItem);
+			}
+			
+			// Get the Play object of the next music
+			public function GetNextMusic():Play
+			{
+				if (musicArray.length != 0)
+				{
+					if (musicList.selectedIndex >= 0 && musicList.selectedIndex + 1 <= musicArray.length - 1)
+					{
+						musicList.selectedIndex = musicList.selectedIndex + 1;
+						return  GetCurrentMusic();
+					}
+					else
+					{
+						musicList.selectedIndex = 0;
+						return  GetCurrentMusic();
+					}
+				}
+				
+				return null;
+			}
+			
+			// Get the Play object of the previous music
+			public function GetPreviousMusic():Play
+			{
+				if (musicArray.length != 0)
+				{
+					if (musicList.selectedIndex - 1 >= 0)
+					{
+						musicList.selectedIndex = musicList.selectedIndex - 1;
+						return  GetCurrentMusic();
+					}
+					else
+					{
+						musicList.selectedIndex = musicArray.length - 1;
+						return  GetCurrentMusic();
+					}
+				}
+				
+				return null;
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Group width="689">
+		<s:layout>
+			<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
+		</s:layout>
+		<s:HGroup width="671" paddingBottom="10" verticalAlign="middle">
+			<s:Image id="bprevious" width="48" height="48" smooth="true" source="assets/previous.png"/>
+			<s:Image id="bplaypause" width="60" height="60" smooth="true" source="assets/pause.png"/>
+			<s:Image id="bnext" width="48" height="48" smooth="true" source="assets/next.png"/>
+			<s:BorderContainer>
+				<s:VGroup x="0" y="0" horizontalAlign="center" paddingBottom="8" paddingLeft="5"
+						  paddingRight="5" paddingTop="15">
+					<s:Label text="Artiste - Title - Album" />
+					<mx:HSlider id="bmusicprogressbar" width="485"/>
+				</s:VGroup>
+			</s:BorderContainer>
+		</s:HGroup>
+		<s:BorderContainer width="670">
+			<s:HGroup width="671" verticalAlign="middle" paddingBottom="5" paddingTop="5" paddingLeft="10">
+				<s:Label fontSize="14" text="Volume" id="vol"/>
+				<s:Rect width="10"/>
+				<mx:HSlider id="bvolume" labels="0,100" width="159" minimum="0" maximum="100" tickInterval="20"/>
+				<s:Rect width="185"/>
+				<s:Image id="brate1" width="30" height="30" smooth="true" source="assets/full_star.png" click="brate1_clickHandler(event)" />
+				<s:Image id="brate2" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate2_clickHandler(event)" />
+				<s:Image id="brate3" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate3_clickHandler(event)" />
+				<s:Image id="brate4" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate4_clickHandler(event)" />
+				<s:Image id="brate5" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate5_clickHandler(event)" />
+				<s:Image id="btweet" width="42" height="42" smooth="true" source="assets/twitter_logo.jpeg" click="tweeter_clickHandler(event)"/>		
+			</s:HGroup>
+		</s:BorderContainer>
+		<s:HGroup height="161" paddingTop="10" verticalAlign="top">
+			<!--
+			PlayList Management
+			-->
+			<s:Group height="161">			
+				<s:VGroup height="143" horizontalAlign="left">
+					<s:BorderContainer width="361" backgroundColor="0xcccccc" borderWeight="0">
+						<s:HGroup width="364" paddingBottom="3" paddingLeft="3" paddingRight="3"
+								  paddingTop="3" verticalAlign="middle">
+							<s:Label fontSize="14" fontWeight="bold" text="Playlists"/>
+							<s:TextInput id="textInputPlayList" width="134"/>
+							<s:Button width="45" height="30" click="AddPlayList(event)"
+									  icon="assets/Button-Add-icon.png"/>
+							<s:Button width="45" height="30" click="RemovePlayList(event)"
+									  icon="assets/Button-Delete-icon.png"/>
+						</s:HGroup>
+					</s:BorderContainer>	
+					<s:List id="playListList" width="362" height="115" change="PlayListChangedHandler(event);">
+						<mx:ArrayCollection id="playListArray"></mx:ArrayCollection>
+					</s:List>
+				</s:VGroup>
+			</s:Group>
+			<!--
+			Music Management
+			-->
+			<s:Group>
+				<s:VGroup horizontalAlign="left">
+					<s:BorderContainer backgroundColor="0xcccccc" borderWeight="0" >
+						<s:HGroup width="301" paddingTop="3" paddingBottom="3" paddingLeft="3" paddingRight="3" verticalAlign="middle">
+							<s:Label fontSize="14" fontWeight="bold" text="Musics"/>							
+							<s:Button width="45" height="30" click="AddMusic(event)"
+									  icon="assets/Folder-Explorer-icon.png"/>
+							<s:Button width="45" height="30" click="RemoveMusic(event)"
+									  icon="assets/Button-Delete-icon.png"/>
+						</s:HGroup>
+					</s:BorderContainer>
+					<s:List id="musicList" width="302" height="115"> 
+						<mx:ArrayCollection id="musicArray"></mx:ArrayCollection>
+					</s:List>					
+				</s:VGroup>
+			</s:Group>
+		</s:HGroup>
+	</s:Group>
+</s:WindowedApplication>

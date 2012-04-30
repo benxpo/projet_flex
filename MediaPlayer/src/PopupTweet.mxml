@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- http://blog.flexexamples.com/2008/01/27/displaying-a-textinput-controls-text-as-a-password-in-flex-redux/ -->
+<mx:Window xmlns:mx="http://www.adobe.com/2006/mxml"
+				layout="vertical"
+				verticalAlign="middle"
+				backgroundColor="white" width="300" height="200">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			
+			private var alert:Alert;
+			public var myname:String;
+			private var authorizationHeader:URLRequestHeader;
+			private function submit_click():void {
+				alert = Alert.show("Closing in 3 seconds.",
+					"Submitting...");
+				
+				var creds:String = username.text+ ":" + password.text;
+				var encodedCredentials:String = creds;
+				authorizationHeader = new URLRequestHeader("Authorization",	"Basic " + encodedCredentials);
+			
+				var r:URLRequest = new URLRequest ("http://twitter.com/statuses/update.xml");
+				if (this.authorizationHeader){
+					r.requestHeaders = [this.authorizationHeader];  
+				}
+				
+				r.method = "POST"
+				var variables : URLVariables = new URLVariables ();
+				variables.status = "playing this song";
+				variables.in_reply_to_status_id = "";
+				r.data = variables;
+				var loader:URLLoader = new URLLoader();
+				loader.load(r);
+				setTimeout(closeAlert, 3000);
+			}
+			
+			private function reset_click():void {
+				alert = Alert.show("Closing in 1 second.",
+					"Resetting...");
+				username.text = "";
+				password.text = "";
+				setTimeout(closeAlert, 1000);
+			}
+			
+			private function closeAlert():void {
+				PopUpManager.removePopUp(alert);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Panel title="Login">
+		<mx:Form>
+			<mx:FormItem label="Username:" required="true">
+				<mx:TextInput id="username"
+							  text=""
+							  maxChars="16" />
+			</mx:FormItem>
+			<mx:FormItem label="Password:" required="true">
+				<mx:TextInput id="password"
+							  text=""
+							  maxChars="16"
+							  displayAsPassword="true"
+							  focusIn="password.displayAsPassword = true;"
+							  focusOut="password.displayAsPassword = true;" />
+			</mx:FormItem>
+		</mx:Form>
+		<mx:ControlBar horizontalAlign="right">
+			<mx:Button id="submit"
+					   label="Submit"
+					   click="submit_click();" />
+			<mx:Button id="reset"
+					   label="Reset"
+					   click="reset_click();" />
+		</mx:ControlBar>
+	</mx:Panel>
+	
+</mx:Window>
