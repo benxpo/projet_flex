@@ -51,7 +51,7 @@
 			
 			protected function onSoundComplete(evt:Event):void
 			{
-				changesong(true); //TODO
+				changesong(false); //TODO
 			}
 			
 			protected function play2():void
@@ -151,7 +151,9 @@
 			// Play the current selected song
 			protected function PlayCurrentSong():void
 			{
-				current = GetCurrentMusic()._path
+				if (musicList.selectedIndex == -1)
+					musicList.selectedIndex = 0;
+				current = GetCurrentMusic()._path;
 				play();
 			}
 			
@@ -271,6 +273,7 @@
 			private function PlayListChangedHandler(event:IndexChangeEvent):void 
 			{
 				UpdateMusicList();
+				musicList.selectedIndex = 0;
 			}
 			
 			//
@@ -437,7 +440,7 @@
 									  icon="assets/Button-Delete-icon.png"/>
 						</s:HGroup>
 					</s:BorderContainer>
-					<s:List id="musicList" width="302" height="115"> 
+					<s:List id="musicList" width="302" height="115" > 
 						<mx:ArrayCollection id="musicArray"></mx:ArrayCollection>
 					</s:List>					
 				</s:VGroup>
