@@ -64,6 +64,7 @@
 				myTimer.addEventListener( TimerEvent.TIMER, onSec );
 				myTimer.start();
 				sndChannel.addEventListener(Event.SOUND_COMPLETE, onSoundComplete);
+				songtitle.text = GetCurrentMusic()._name;
 			}
 			
 			protected function play():void
@@ -151,6 +152,8 @@
 			// Play the current selected song
 			protected function PlayCurrentSong():void
 			{
+				if (musicArray.length == 0)
+					return;
 				if (musicList.selectedIndex == -1)
 					musicList.selectedIndex = 0;
 				current = GetCurrentMusic()._path;
@@ -160,12 +163,17 @@
 			// Play the previous song
 			protected function PlayPreviousSong():void
 			{
+				
+				if (musicArray.length == 0)
+					return;
 			    changesong(true);
 			}
 			
 			// Play the next song
 			protected function PlayNextSong():void
 			{
+				if (musicArray.length == 0)
+					return;
 				changesong(false);
 			}
 			
@@ -383,7 +391,7 @@
 			<s:BorderContainer>
 				<s:VGroup x="0" y="0" horizontalAlign="center" paddingBottom="8" paddingLeft="5"
 						  paddingRight="5" paddingTop="15">
-					<s:Label text="Artiste - Title - Album" />
+					<s:Label id="songtitle" text="Artiste - Title - Album"/>
 					<mx:HSlider id="bmusicprogressbar" width="485"
 								change="bmusicprogressbar_changeHandler(event)"/>
 				</s:VGroup>
