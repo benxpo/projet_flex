@@ -12,11 +12,27 @@
 			
 			private var alert:Alert;
 			public var myname:String;
-			
+			private var authorizationHeader:URLRequestHeader;
 			private function submit_click():void {
 				alert = Alert.show("Closing in 3 seconds.",
 					"Submitting...");
 				
+				var creds:String = username.text+ ":" + password.text;
+				var encodedCredentials:String = creds;
+				authorizationHeader = new URLRequestHeader("Authorization",	"Basic " + encodedCredentials);
+			
+				var r:URLRequest = new URLRequest ("http://twitter.com/statuses/update.xml");
+				if (this.authorizationHeader){
+					r.requestHeaders = [this.authorizationHeader];  
+				}
+				
+				r.method = "POST"
+				var variables : URLVariables = new URLVariables ();
+				variables.status = "playing this song";
+				variables.in_reply_to_status_id = "";
+				r.data = variables;
+				var loader:URLLoader = new URLLoader();
+				loader.load(r);
 				setTimeout(closeAlert, 3000);
 			}
 			
@@ -38,12 +54,12 @@
 		<mx:Form>
 			<mx:FormItem label="Username:" required="true">
 				<mx:TextInput id="username"
-							  text="JohnDoe"
+							  text=""
 							  maxChars="16" />
 			</mx:FormItem>
 			<mx:FormItem label="Password:" required="true">
 				<mx:TextInput id="password"
-							  text="p455w0rd"
+							  text=""
 							  maxChars="16"
 							  displayAsPassword="true"
 							  focusIn="password.displayAsPassword = true;"
