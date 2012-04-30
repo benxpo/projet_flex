@@ -137,8 +137,15 @@
 					sndChannel=soundClip.play(loca);
 					sndChannel.soundTransform = new SoundTransform (snd);
 				}
+				if (bmusicprogressbar.value == soundClip.length)
+				{
+					changesong(false);
+				}
 			}
 			
+			//
+			// init
+			//
 			
 			public function init():void
 			{
