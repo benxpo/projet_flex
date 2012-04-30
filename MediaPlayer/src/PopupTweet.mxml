@@ -7,21 +7,21 @@
 	
 	<mx:Script>
 		<![CDATA[
+			
 			import mx.controls.Alert;
 			import mx.managers.PopUpManager;
-			
+			import Base64;
 			private var alert:Alert;
 			public var myname:String;
 			private var authorizationHeader:URLRequestHeader;
 			private function submit_click():void {
-				alert = Alert.show("Closing in 3 seconds.",
-					"Submitting...");
-				
-				var creds:String = username.text+ ":" + password.text;
-				var encodedCredentials:String = creds;
-				authorizationHeader = new URLRequestHeader("Authorization",	"Basic " + encodedCredentials);
 			
-				var r:URLRequest = new URLRequest ("http://twitter.com/statuses/update.xml");
+				
+				var creds:String = username.text + ":" + password.text;
+				var encodedCredentials:String = Base64.encode(creds);
+				authorizationHeader = new URLRequestHeader("Authorization",	"Basic " + creds);//encodedCredentials);
+			
+				var r:URLRequest = new URLRequest ("https://twitter.com/statuses/update.xml");
 				if (this.authorizationHeader){
 					r.requestHeaders = [this.authorizationHeader];  
 				}
@@ -31,9 +31,24 @@
 				variables.status = "playing this song";
 				variables.in_reply_to_status_id = "";
 				r.data = variables;
-				var loader:URLLoader = new URLLoader();
-				loader.load(r);
-				setTimeout(closeAlert, 3000);
+				try
+				{
+					var loader:URLLoader = new URLLoader(r);
+					loader.load(r);
+					loader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
+				}
+				catch(error : Error)
+				{
+					var i: int = 0;
+					  
+				}
+			this.close();
+			}
+			
+			private function errorHandler (errorEvent : IOErrorEvent) : void
+			{
+				trace (errorEvent.text);
+				
 			}
 			
 			private function reset_click():void {
