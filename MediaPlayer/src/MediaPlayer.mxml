@@ -51,7 +51,7 @@
 			
 			protected function onSoundComplete(evt:Event):void
 			{
-				changesong(false); //TODO
+				changesong(false); 
 			}
 			
 			protected function play2():void
@@ -64,7 +64,8 @@
 				myTimer.addEventListener( TimerEvent.TIMER, onSec );
 				myTimer.start();
 				sndChannel.addEventListener(Event.SOUND_COMPLETE, onSoundComplete);
-				songtitle.text = GetCurrentMusic()._name;
+				if (musicArray.length != 0)
+					songtitle.text = GetCurrentMusic()._name;
 			}
 			
 			protected function play():void
@@ -104,12 +105,13 @@
 			
 			protected function changesong(prec:Boolean):void
 			{
-
-				if (prec)
-					current = GetPreviousMusic()._path;
-				else
-					current = GetNextMusic()._path;
-				
+				if (musicArray.length != 0)
+				{	
+					if (prec)
+						current = GetPreviousMusic()._path;
+					else
+						current = GetNextMusic()._path;
+				}	
 				loca = 0;
 				loaded = false;
 				sndChannel.stop();
@@ -152,11 +154,10 @@
 			// Play the current selected song
 			protected function PlayCurrentSong():void
 			{
-				if (musicArray.length == 0)
-					return;
 				if (musicList.selectedIndex == -1)
 					musicList.selectedIndex = 0;
-				current = GetCurrentMusic()._path;
+				if (musicArray.length != 0)
+					current = GetCurrentMusic()._path;
 				play();
 			}
 			
