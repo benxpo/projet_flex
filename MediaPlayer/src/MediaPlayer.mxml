@@ -18,12 +18,123 @@
 			import mx.collections.Sort;
 			import mx.collections.SortField;
 			import mx.controls.Alert;
+			import mx.events.SliderEvent;
 			
 			import spark.events.IndexChangeEvent;
 			
 			private var playListcollection:PlayListCollection = new PlayListCollection();	
 			private var emptyStar:String = "../assets/empty_star.png";
 			private var fullStar:String = "../assets/full_star.png";
+			
+			//
+			/// Music player
+			//
+			
+			public var soundClip:Sound;//Create an instance of the Sound class
+			public var sndChannel:SoundChannel;//Create a new SoundChannel Object
+			public var loaded:Boolean = false; // on verifie que le chargement est fini avant de lancer la chanson
+			public var loca:int = 0; // pour conserver le temps quand on pause
+			public var snd:Number = 1; // la valeur du son
+			public var isplay:Boolean = false; // pour l'alternance du bouton play/pause
+			
+			public var current:String = ""; // La chanson qui va etre jouée
+			
+			private var myTimer:Timer = new Timer( 1000, 0 );
+			
+			protected function onSec( pEvt:TimerEvent ):void
+			{
+				if (bplaypause.source == "../assets/pause.png")
+					bmusicprogressbar.value = sndChannel.position;
+				if (bmusicprogressbar.value == soundClip.length)
+					onSoundComplete(null);
+			}
+			
+			protected function onSoundComplete(evt:Event):void
+			{
+				changesong(true); //TODO
+			}
+			
+			protected function play2():void
+			{
+				sndChannel=soundClip.play(loca);
+				sndChannel.soundTransform = new SoundTransform (snd);
+				loca = 0;
+				isplay = true;
+				bplaypause.source = "../assets/pause.png";
+				myTimer.addEventListener( TimerEvent.TIMER, onSec );
+				myTimer.start();
+				sndChannel.addEventListener(Event.SOUND_COMPLETE, onSoundComplete);
+			}
+			
+			protected function play():void
+			{
+				if (!isplay)
+				{
+					
+					snd = bvolume.value / 100;
+					
+					if (loaded == false)
+					{
+						soundClip=new Sound();
+						sndChannel = new SoundChannel()
+						soundClip.load(new URLRequest(current));
+						soundClip.addEventListener(Event.COMPLETE,onComplete,false,0,true);
+					}
+					else
+					{	
+						play2();
+					}
+					
+					function onComplete(evt:Event):void
+					{
+						loaded = true;
+						bmusicprogressbar.maximum = soundClip.length ;
+						play2();
+					}
+				}
+				else
+				{
+					loca = sndChannel.position;
+					sndChannel.stop();
+					isplay = false;
+					bplaypause.source = "../assets/play.png";
+				}
+			}
+			
+			protected function changesong(prec:Boolean):void
+			{
+
+				if (prec)
+					current = GetPreviousMusic()._path;
+				else
+					current = GetNextMusic()._path;
+				
+				loca = 0;
+				loaded = false;
+				sndChannel.stop();
+				isplay = false;
+				bplaypause.source = "../assets/play.png";
+				play();
+			}
+			
+			protected function bvolume_changeHandler(event:SliderEvent):void
+			{
+				sndChannel.soundTransform = new SoundTransform (bvolume.value / 100);
+				snd = bvolume.value / 100;
+			}
+			
+			protected function bmusicprogressbar_changeHandler(event:SliderEvent):void
+			{
+				loca = bmusicprogressbar.value;
+				
+				if (bplaypause.source == "../assets/pause.png")
+				{
+					sndChannel.stop();
+					
+					sndChannel=soundClip.play(loca);
+				}
+			}
+			
 			
 			public function init():void
 			{
@@ -38,15 +149,23 @@
 			
 			// Play the current selected song
 			protected function PlayCurrentSong():void
-			{}
+			{
+				current = GetCurrentMusic()._path
+				play();
+			}
 			
 			// Play the previous song
 			protected function PlayPreviousSong():void
-			{}
+			{
+			    changesong(true);
+			}
 			
 			// Play the next song
 			protected function PlayNextSong():void
-			{}
+			{
+				changesong(false);
+			}
+			
 			
 			//
 			// Tweeter rate
@@ -244,6 +363,8 @@
 				
 				return null;
 			}
+			
+
 		]]>
 	</fx:Script>
 	
@@ -252,14 +373,15 @@
 			<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
 		</s:layout>
 		<s:HGroup width="671" paddingBottom="10" verticalAlign="middle">
-			<s:Image id="bprevious" width="48" height="48" smooth="true" source="assets/previous.png"/>
-			<s:Image id="bplaypause" width="60" height="60" smooth="true" source="assets/pause.png"/>
-			<s:Image id="bnext" width="48" height="48" smooth="true" source="assets/next.png"/>
+			<s:Image id="bprevious" width="48" height="48" smooth="true" source="assets/previous.png" click="PlayPreviousSong()"/>
+			<s:Image id="bplaypause" width="60" height="60" smooth="true" source="assets/pause.png" click="PlayCurrentSong()"/>
+			<s:Image id="bnext" width="48" height="48" smooth="true" source="assets/next.png" click="PlayNextSong()"/>
 			<s:BorderContainer>
 				<s:VGroup x="0" y="0" horizontalAlign="center" paddingBottom="8" paddingLeft="5"
 						  paddingRight="5" paddingTop="15">
 					<s:Label text="Artiste - Title - Album" />
-					<mx:HSlider id="bmusicprogressbar" width="485"/>
+					<mx:HSlider id="bmusicprogressbar" width="485"
+								change="bmusicprogressbar_changeHandler(event)"/>
 				</s:VGroup>
 			</s:BorderContainer>
 		</s:HGroup>
@@ -267,7 +389,8 @@
 			<s:HGroup width="671" verticalAlign="middle" paddingBottom="5" paddingTop="5" paddingLeft="10">
 				<s:Label fontSize="14" text="Volume" id="vol"/>
 				<s:Rect width="10"/>
-				<mx:HSlider id="bvolume" labels="0,100" width="159" minimum="0" maximum="100" tickInterval="20"/>
+				<mx:HSlider id="bvolume" width="159" change="bvolume_changeHandler(event)"
+							labels="0,100" maximum="100" minimum="0" tickInterval="20"/>
 				<s:Rect width="185"/>
 				<s:Image id="brate1" width="30" height="30" smooth="true" source="assets/full_star.png" click="brate1_clickHandler(event)" />
 				<s:Image id="brate2" width="30" height="30" smooth="true" source="assets/empty_star.png" click="brate2_clickHandler(event)" />
